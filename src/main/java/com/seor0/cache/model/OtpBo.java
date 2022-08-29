@@ -1,14 +1,13 @@
 package com.seor0.cache.model;
 
 
-import javax.persistence.Entity;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
-@Entity
-@Table(schema="cacheHaze", name = "otp")
+
+
 public class OtpBo {
 
 	@Id
@@ -46,6 +45,13 @@ public class OtpBo {
 	public void setGenerateTime(String generateTime) {
 		this.generateTime = generateTime;
 	}
+	@Override
+	public String toString() {
+		return "" +getTrxId() + "";
+	}
+	
+	
+	
 	
 	
 }

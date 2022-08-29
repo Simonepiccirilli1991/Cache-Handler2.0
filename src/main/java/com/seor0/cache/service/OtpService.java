@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.seor0.cache.config.CacheClient;
 import com.seor0.cache.model.OtpBo;
 import com.seor0.cache.repo.OtpRepo;
 import com.seor0.cache.service.request.CheckOtpRequest;
@@ -20,6 +21,71 @@ public class OtpService {
 	@Autowired
 	OtpRepo otpRepo;
 	
+	private CacheClient cacheClient;
+	
+	public String inserisciCache(OtpRequest request) {
+		OtpBo otpDto = new OtpBo();
+		
+		otpDto.setGenerateTime(new SimpleDateFormat("HH.mm.ss").format(new java.util.Date().getTime()));
+		otpDto.setOtp(request.getOtp());
+		otpDto.setUsername(request.getUsername());
+		otpDto.setProfilo(request.getProfilo());
+		
+		return cacheClient.insert(otpDto.toString(), otpDto);
+	}
+	
+	public OtpBo getOtpCache(String key) {
+		
+		// cambiare poi
+		OtpBo response = null;
+		try {
+			response = cacheClient.get(key);
+		}catch(Exception e) {
+			if(response == null) {
+				//TODO implementare lancio eccezzione
+			}
+		}
+		
+		return response;
+	}
+	
+	public CheckOtpResponse CheckOtpCache(CheckOtpRequest request) {
+		
+		// cambiare poi
+		OtpBo otpDto = null;
+		CheckOtpResponse response = new CheckOtpResponse();
+		try {
+			otpDto = cacheClient.get(request.getTrxId());
+		}catch(Exception e) {
+			if(response == null) {
+				response.setCodiceEsito("01"); response.setCheckOk(false); return response;
+			}	
+		}
+		LocalTime timeStart = LocalTime.parse(otpDto.getGenerateTime());
+		LocalTime timeEnd = LocalTime.now();
+		// addo 1 minuti al tempo di start tempo massimo
+		timeStart.plusMinutes(1);
+		// check se tempo limite e edentro start +1 minuto
+		if(timeStart.isAfter(timeEnd)) {
+			//TODO implementare gestione caso errore
+			response.setCodiceEsito("02"); response.setCheckOk(false); return response;
+		}
+		
+		// checko effettivo otp
+		if(request.getOtp() != otpDto.getOtp() || request.getProfilo() != otpDto.getProfilo()) {
+			//TODO implementare gestione caso errore
+			response.setCodiceEsito("03"); response.setCheckOk(false); return response;
+		}
+		
+		response.setCheckOk(true);
+		response.setCodiceEsito("00");
+		
+		return response;
+		}
+	
+	
+	// da qui in poi i servici si connettono a db e cachano poi
+	// si connette a db per fare ste operazioni, facciamo direttamente su client e via
 	
 	public OtpBo insert(OtpRequest request) {
 		
