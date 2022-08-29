@@ -1,24 +1,19 @@
 package com.seor0.cache.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
-@Entity
-@Table(schema="cacheHaze", name = "utente")
+
+//@Entity
+//@Table(schema="cacheHaze", name = "utente")
 public class Utente {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private String bt;
 	private String abi;
-	@Column(unique=true)
+
 	private String username;
-	@Column(unique=true)
+
 	private String email;
 	private String cellulare;
 	private Boolean cellCertificato;

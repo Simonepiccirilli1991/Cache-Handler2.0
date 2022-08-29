@@ -1,25 +1,24 @@
 package com.seor0.cache.model;
 
+import java.io.Serializable;
 
+public class OtpBo implements Serializable{
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-
-
-public class OtpBo {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long trxId;
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.AUTO)
+	private static final long serialVersionUID = 1L;
+	private String trxId;
 	private String otp;
 	private String username;
 	private String profilo;
 	private String generateTime;
 	
-	public long getTrxId() {
+	
+	public String getTrxId() {
 		return trxId;
+	}
+	public void setTrxId(String trxId) {
+		this.trxId = trxId;
 	}
 	public String getOtp() {
 		return otp;
@@ -45,10 +44,7 @@ public class OtpBo {
 	public void setGenerateTime(String generateTime) {
 		this.generateTime = generateTime;
 	}
-	@Override
-	public String toString() {
-		return "" +getTrxId() + "";
-	}
+	
 	
 	
 	

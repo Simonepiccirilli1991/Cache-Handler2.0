@@ -11,11 +11,14 @@ public class OtpRequest {
 	@NonNull 
 	private String profilo;
 	
-	public OtpRequest(String username, String otp, String profilo) {
+	private String trxId;
+	
+	public OtpRequest(String username, String otp, String profilo, String trxId) {
 		super();
 		this.username = username;
 		this.otp = otp;
 		this.profilo = profilo;
+		this.trxId = trxId;
 	}
 
 	public String getUsername() {
@@ -29,7 +32,9 @@ public class OtpRequest {
 		return profilo;
 	}
 	
-	
+	public String getTrxId() {
+		return trxId;
+	}
 	
 	
 }
