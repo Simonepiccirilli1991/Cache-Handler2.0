@@ -24,7 +24,8 @@ public class OtpController {
 	}
 	
 	// get 
-	public OtpBo getCache(OtpRequest request) {
+	@RequestMapping("get")
+	public OtpBo getCache(@RequestBody OtpRequest request) {
 		return otpService.getOtpCache(request.getTrxId());
 	}
 	// check

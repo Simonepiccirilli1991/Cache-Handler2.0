@@ -35,16 +35,16 @@ public class OtpService {
 	public OtpBo getOtpCache(String key) {
 		
 		// cambiare poi
-		OtpBo response = null;
-		try {
-			response = cacheClient.get(key);
-		}catch(Exception e) {
-			if(response == null) {
-				//TODO implementare lancio eccezzione
-			}
-		}
+//		OtpBo response = new OtpBo();
+//		try {
+//			response = cacheClient.get(key);
+//		}catch(Exception e) {
+//			if(response == null) {
+//				//TODO implementare lancio eccezzione
+//			}
+//		}
 		
-		return response;
+		return cacheClient.get(key);
 	}
 	
 	public CheckOtpResponse CheckOtpCache(CheckOtpRequest request) {
