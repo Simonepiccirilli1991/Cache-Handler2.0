@@ -53,7 +53,7 @@ public class OtpService {
 		OtpBo otpDto = null;
 		CheckOtpResponse response = new CheckOtpResponse();
 		try {
-			otpDto = cacheClient.get("");
+			otpDto = cacheClient.get(request.getTrxId());
 		}catch(Exception e) {
 			
 				response.setCodiceEsito("01"); response.setCheckOk(false); return response;

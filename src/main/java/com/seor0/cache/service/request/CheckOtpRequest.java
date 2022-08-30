@@ -7,20 +7,20 @@ public class CheckOtpRequest {
 	@NonNull
 	private String otp;
 	@NonNull
-	private Long trxId;
+	private String trxId;
 	@NonNull
 	private String profilo;
 	
 	public String getOtp() {
 		return otp;
 	}
-	public Long getTrxId() {
+	public String getTrxId() {
 		return trxId;
 	}
 	public String getProfilo() {
 		return profilo;
 	}
-	public CheckOtpRequest(String otp, Long trxId, String profilo) {
+	public CheckOtpRequest(String otp, String trxId, String profilo) {
 		super();
 		this.otp = otp;
 		this.trxId = trxId;

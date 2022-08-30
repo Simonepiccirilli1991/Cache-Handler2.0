@@ -25,7 +25,7 @@ public class CacheClient {
 	  private MapConfig mapConfig() {
 	    MapConfig mapConfig = new MapConfig(OTPS);
 	    mapConfig.setTimeToLiveSeconds(360);
-	    mapConfig.setMaxIdleSeconds(60);
+	    mapConfig.setMaxIdleSeconds(120);
 	    return mapConfig;
 	  }
 	  

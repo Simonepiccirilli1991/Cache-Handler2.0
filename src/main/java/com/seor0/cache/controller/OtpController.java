@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.seor0.cache.model.OtpBo;
 import com.seor0.cache.service.OtpService;
+import com.seor0.cache.service.request.CheckOtpRequest;
 import com.seor0.cache.service.request.OtpRequest;
+import com.seor0.cache.service.response.CheckOtpResponse;
 
 @RestController
 @RequestMapping("cache/otp")
@@ -29,10 +31,19 @@ public class OtpController {
 		return otpService.getOtpCache(request.getTrxId());
 	}
 	// check
-	
+	@RequestMapping("check")
+	public CheckOtpResponse checkOtp(@RequestBody CheckOtpRequest request) {
+		return otpService.CheckOtpCache(request);
+	}
 	// update
+	@RequestMapping("put")
+	public String putCache(@RequestBody OtpRequest request) {
+		return null;
+		//TODO vedere se ci serve o meno
+	}
+	
 	
 	// cancello
-	
+	// pretty useless, si auto elimina dopo 120 se nn letta e 360 totali
 	
 }
