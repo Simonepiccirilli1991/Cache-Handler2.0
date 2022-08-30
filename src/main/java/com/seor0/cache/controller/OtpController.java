@@ -24,7 +24,12 @@ public class OtpController {
 		
 		return otpService.inserisciCache(request);
 	}
-	
+	// inserisci e invia
+	@RequestMapping("insert/2")
+	public String inserteSend(@RequestBody OtpRequest request) {
+		
+		return otpService.inserisceInvia(request);
+	}
 	// get 
 	@RequestMapping("get")
 	public OtpBo getCache(@RequestBody OtpRequest request) {

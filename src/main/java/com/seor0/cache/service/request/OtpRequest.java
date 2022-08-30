@@ -1,22 +1,25 @@
 package com.seor0.cache.service.request;
 
+
 import org.springframework.lang.NonNull;
+
+
 
 public class OtpRequest {
 
 	@NonNull 
 	private String username;
 	@NonNull 
-	private String otp;
-	@NonNull 
 	private String profilo;
+	@NonNull
+	private String email;
 	
 	private String trxId;
 	
-	public OtpRequest(String username, String otp, String profilo, String trxId) {
+	public OtpRequest(String username, String email, String profilo, String trxId) {
 		super();
 		this.username = username;
-		this.otp = otp;
+		this.email = email;
 		this.profilo = profilo;
 		this.trxId = trxId;
 	}
@@ -25,8 +28,8 @@ public class OtpRequest {
 		return username;
 	}
 
-	public String getOtp() {
-		return otp;
+	public String getEmail() {
+		return email;
 	}
 	public String getProfilo() {
 		return profilo;
@@ -35,6 +38,5 @@ public class OtpRequest {
 	public String getTrxId() {
 		return trxId;
 	}
-	
 	
 }

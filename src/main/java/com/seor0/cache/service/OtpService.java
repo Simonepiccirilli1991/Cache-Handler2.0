@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.seor0.cache.config.CacheClient;
+import com.seor0.cache.fragment.service.GeneraInviaService;
 import com.seor0.cache.model.OtpBo;
 import com.seor0.cache.service.request.CheckOtpRequest;
 import com.seor0.cache.service.request.OtpRequest;
 import com.seor0.cache.service.response.CheckOtpResponse;
+import com.seor0.cache.service.response.GeneraInviaResponse;
 
 @Service
 public class OtpService {
@@ -19,18 +21,43 @@ public class OtpService {
 
 	@Autowired
 	private CacheClient cacheClient;
+	@Autowired
+	private GeneraInviaService giService;
 	
 	public String inserisciCache(OtpRequest request) {
 		OtpBo otpDto = new OtpBo();
 		
 		otpDto.setGenerateTime(new SimpleDateFormat("HH.mm.ss").format(new java.util.Date().getTime()));
-		otpDto.setOtp(request.getOtp());
+		//otpDto.setOtp(request.getOtp());
 		otpDto.setUsername(request.getUsername());
 		otpDto.setProfilo(request.getProfilo());
 		otpDto.setTrxId(request.getTrxId());
 		
 		return cacheClient.insert(request.getTrxId(), otpDto);
 	}
+	
+	
+	public String inserisceInvia(OtpRequest request) {
+		OtpBo otpDto = new OtpBo();
+		GeneraInviaResponse otpDTO= new GeneraInviaResponse();
+		
+		otpDTO = giService.generaeInvia(request.getUsername(), request.getEmail());
+		// se esito diverso da 00 torno msg errore
+		//TODO implementare genstine errori ora non riesco
+		if(!otpDTO.getEsito().equals("00"))
+			return otpDTO.getMsgResp();
+		
+		otpDto.setGenerateTime(new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime()));
+		otpDto.setOtp(otpDTO.getOoTp());
+		otpDto.setUsername(request.getUsername());
+		otpDto.setProfilo(request.getProfilo());
+		otpDto.setTrxId(request.getTrxId());
+		
+		cacheClient.insert(request.getTrxId(), otpDto);
+		
+		return otpDTO.getMsgResp();
+	}
+	
 	
 	public OtpBo getOtpCache(String key) {
 		
@@ -50,7 +77,7 @@ public class OtpService {
 	public CheckOtpResponse CheckOtpCache(CheckOtpRequest request) {
 		
 		// cambiare poi
-		OtpBo otpDto = null;
+		OtpBo otpDto = new OtpBo();
 		CheckOtpResponse response = new CheckOtpResponse();
 		try {
 			otpDto = cacheClient.get(request.getTrxId());
