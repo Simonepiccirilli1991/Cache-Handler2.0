@@ -87,17 +87,18 @@ public class OtpService {
 				
 		}
 		LocalTime timeStart = LocalTime.parse(otpDto.getGenerateTime());
-		LocalTime timeEnd = LocalTime.now();
+		LocalTime timeEnd = LocalTime.parse(new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime()));
 		// addo 1 minuti al tempo di start tempo massimo
-		timeStart.plusMinutes(1);
+		System.out.println("Time start piu 1 min ="+ timeStart.plusMinutes(1) );
+		System.out.println("Time end ="+ timeEnd );
 		// check se tempo limite e edentro start +1 minuto
-		if(timeStart.isAfter(timeEnd)) {
+		if(timeEnd.isAfter(timeStart.plusMinutes(1))) {
 			//TODO implementare gestione caso errore
 			response.setCodiceEsito("02"); response.setCheckOk(false); return response;
 		}
 		
 		// checko effettivo otp
-		if(request.getOtp() != otpDto.getOtp() || request.getProfilo() != otpDto.getProfilo()) {
+		if(!request.getOtp().equals(otpDto.getOtp()) || !request.getProfilo().equals(otpDto.getProfilo())) {
 			//TODO implementare gestione caso errore
 			response.setCodiceEsito("03"); response.setCheckOk(false); return response;
 		}
