@@ -38,7 +38,7 @@ public class OtpService {
 	
 	
 	public String inserisceInvia(OtpRequest request) {
-		OtpBo otpDto = new OtpBo();
+		OtpBo otpEnt = new OtpBo();
 		GeneraInviaResponse otpDTO= new GeneraInviaResponse();
 		
 		otpDTO = giService.generaeInvia(request.getUsername(), request.getEmail());
@@ -47,13 +47,13 @@ public class OtpService {
 		if(!otpDTO.getEsito().equals("00"))
 			return otpDTO.getMsgResp();
 		
-		otpDto.setGenerateTime(new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime()));
-		otpDto.setOtp(otpDTO.getOoTp());
-		otpDto.setUsername(request.getUsername());
-		otpDto.setProfilo(request.getProfilo());
-		otpDto.setTrxId(request.getTrxId());
+		otpEnt.setGenerateTime(new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime()));
+		otpEnt.setOtp(otpDTO.getOoTp());
+		otpEnt.setUsername(request.getUsername());
+		otpEnt.setProfilo(request.getProfilo());
+		otpEnt.setTrxId(request.getTrxId());
 		
-		cacheClient.insert(request.getTrxId(), otpDto);
+		cacheClient.insert(request.getTrxId(), otpEnt);
 		
 		return otpDTO.getMsgResp();
 	}
