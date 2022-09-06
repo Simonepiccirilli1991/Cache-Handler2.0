@@ -11,6 +11,8 @@ import com.seor0.cache.service.request.CheckOtpRequest;
 import com.seor0.cache.service.request.OtpRequest;
 import com.seor0.cache.service.response.CheckOtpResponse;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("cache/otp")
 public class OtpController {
@@ -32,6 +34,7 @@ public class OtpController {
 	}
 	// get 
 	@RequestMapping("get")
+	@ApiOperation(value = "Get user", notes = "Get user by id")
 	public OtpBo getCache(@RequestBody OtpRequest request) {
 		return otpService.getOtpCache(request.getTrxId());
 	}
