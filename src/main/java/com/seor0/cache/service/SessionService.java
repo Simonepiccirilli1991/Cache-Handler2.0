@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.seor0.cache.config.CacheClientSession;
 import com.seor0.cache.fragment.service.GeneraSessionService;
@@ -31,7 +32,7 @@ public class SessionService {
 			session.setBt(request.getBt());
 			session.setCanale(request.getCanale());
 			session.setScope(request.getScope());
-			session.setGeneTime((new SimpleDateFormat("HH.mm.ss").format(new java.util.Date().getTime())));
+			session.setGeneTime((new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime())));
 			session.setUsername(request.getUsername());
 			session.setSessionActive(true);
 			session.setSessionId(gs.generaSessionId(request.getBt(),request.getAbi(), session.getGeneTime(),session.getCanale()));
@@ -94,7 +95,7 @@ public class SessionService {
 			return response;
 		}
 		session.setScope(request.getScope());
-		session.setUpdateTime((new SimpleDateFormat("HH.mm.ss").format(new java.util.Date().getTime())));
+		session.setUpdateTime((new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime())));
 		cacheClient.put(request.getBt(), session);
 		
 		response.setScope(session.getScope());
@@ -106,18 +107,17 @@ public class SessionService {
 	
 	public SessionResponse getSession(SessionRequest request) {
 		SessionResponse response = new SessionResponse();
-		//SessionUtente session = new SessionUtente();
-		// controllo se sessione esiste 
-//		boolean sessionExist;
-//		sessionExist = cacheClient.exist(request.getBt());
-//		if(!sessionExist) {
-//			response.setSessionNoExist(true);
-//			return response;
-//		}
-		SessionUtente session = cacheClient.get(request.getBt()); 
+		SessionUtente session = new SessionUtente();
+		//controllo se sessione esiste 
+		boolean sessionExist;
+		sessionExist = cacheClient.exist(request.getBt());
+		if(!sessionExist) {
+			response.setSessionNoExist(true);
+			return response;
+		}
+		session = cacheClient.get(request.getBt()); 
 		//LocalTime timeStart = LocalTime.parse(resp.getGeneTime());
-	    LocalTime timeStart = LocalTime.parse(session.getGeneTime());
-		//LocalTime timeStart = (StringUtils.isEmpty(session.getUpdateTime())) ? LocalTime.parse(session.getUpdateTime()) : LocalTime.parse(session.getGeneTime());
+		LocalTime timeStart = (session.getUpdateTime() != null) ? LocalTime.parse(session.getUpdateTime()) : LocalTime.parse(session.getGeneTime());
 		LocalTime timeEnd = LocalTime.parse(new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime()));
 		// addo 5 minuti al tempo di start tempo massimo
 		System.out.println("Time start piu 5 min ="+ timeStart.plusMinutes(1) );

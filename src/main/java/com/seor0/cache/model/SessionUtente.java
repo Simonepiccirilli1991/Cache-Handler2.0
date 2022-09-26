@@ -1,8 +1,10 @@
 package com.seor0.cache.model;
 
-public class SessionUtente {
+import java.io.Serializable;
 
-	
+public class SessionUtente implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private String username;
 	private String bt;
 	private String canale;

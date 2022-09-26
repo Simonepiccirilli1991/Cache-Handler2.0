@@ -16,7 +16,7 @@ import com.seor0.cache.model.SessionUtente;
 @Component
 public class CacheClientSession {
 
-	public static final String SESSIONS = "session";
+	public static final String SESSIONS = "sessions";
 	  private final HazelcastInstance hazelcastInstance1 
 	     = Hazelcast.newHazelcastInstance(createConfig());
 
@@ -38,9 +38,9 @@ public class CacheClientSession {
 		    return map.putIfAbsent(bt, session);
 		  }
 
-		  public SessionUtente get(String bt){
+		  public SessionUtente get(String key){
 		    IMap<String, SessionUtente> map = hazelcastInstance1.getMap(SESSIONS);
-		    return map.get(bt);
+		    return map.get(key);
 		    
 //		    SessionUtente resp =  map.get(bt);
 //		    // ogni volta che chiamo la get checko se sessione ancora valida max 5 min
@@ -59,9 +59,9 @@ public class CacheClientSession {
 //			return resp;
 		  }
 		  
-		  public SessionUtente insert(String bt, SessionUtente request){
+		  public SessionUtente insert(String key, SessionUtente request){
 			    IMap<String, SessionUtente> map = hazelcastInstance1.getMap(SESSIONS);
-			    map.put(bt, request);
+			    map.put(key, request);
 			    return request;
 			  }
 		  
