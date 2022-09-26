@@ -14,9 +14,9 @@ public class CacheClientOtp {
 
 	public static final String OTPS = "otps";
 	  private final HazelcastInstance hazelcastInstance 
-	     = Hazelcast.newHazelcastInstance(createConfig());
+	     = Hazelcast.newHazelcastInstance(createConfig2());
 
-	  public Config createConfig() {
+	  public Config createConfig2() {
 	    Config config = new Config();
 	    config.addMapConfig(mapConfig());
 	    return config;

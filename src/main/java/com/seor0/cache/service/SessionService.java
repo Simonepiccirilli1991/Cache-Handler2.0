@@ -1,13 +1,13 @@
 package com.seor0.cache.service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.seor0.cache.config.CacheClientOtp;
 import com.seor0.cache.config.CacheClientSession;
 import com.seor0.cache.fragment.service.GeneraSessionService;
 import com.seor0.cache.model.SessionUtente;
@@ -59,7 +59,7 @@ public class SessionService {
 		boolean sessionExist;
 		boolean sessionIsActive = false;
 		
-		sessionExist = cacheClient.exist(request.getBt(), session);
+		sessionExist = cacheClient.exist(request.getBt());
 		if(sessionExist) {
 			session = cacheClient.get(request.getBt()); 
 			sessionIsActive = session.isSessionActive();
@@ -81,7 +81,7 @@ public class SessionService {
 		SessionResponse response = new SessionResponse();
 		SessionUtente session = new SessionUtente();
 		boolean sessionExist;
-		sessionExist = cacheClient.exist(request.getBt(), session);
+		sessionExist = cacheClient.exist(request.getBt());
 		if(!sessionExist) {
 			response.setSessionNoExist(true);
 			return response;
@@ -106,15 +106,27 @@ public class SessionService {
 	
 	public SessionResponse getSession(SessionRequest request) {
 		SessionResponse response = new SessionResponse();
-		SessionUtente session = new SessionUtente();
+		//SessionUtente session = new SessionUtente();
 		// controllo se sessione esiste 
-		boolean sessionExist;
-		sessionExist = cacheClient.exist(request.getBt(), session);
-		if(!sessionExist) {
-			response.setSessionNoExist(true);
-			return response;
+//		boolean sessionExist;
+//		sessionExist = cacheClient.exist(request.getBt());
+//		if(!sessionExist) {
+//			response.setSessionNoExist(true);
+//			return response;
+//		}
+		SessionUtente session = cacheClient.get(request.getBt()); 
+		//LocalTime timeStart = LocalTime.parse(resp.getGeneTime());
+	    LocalTime timeStart = LocalTime.parse(session.getGeneTime());
+		//LocalTime timeStart = (StringUtils.isEmpty(session.getUpdateTime())) ? LocalTime.parse(session.getUpdateTime()) : LocalTime.parse(session.getGeneTime());
+		LocalTime timeEnd = LocalTime.parse(new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime()));
+		// addo 5 minuti al tempo di start tempo massimo
+		System.out.println("Time start piu 5 min ="+ timeStart.plusMinutes(1) );
+		System.out.println("Time end ="+ timeEnd );
+		// check se tempo limite e edentro start +1 minuto
+		if(timeEnd.isAfter(timeStart.plusMinutes(5))) {
+			response.setSessionActive(false); return response;
 		}
-		session = cacheClient.get(request.getBt()); 
+		
 		response.setScope(session.getScope());
 		response.setBt(session.getBt());
 		response.setSessionActive(session.isSessionActive());
@@ -128,7 +140,7 @@ public class SessionService {
 		SessionUtente session = new SessionUtente();
 		// controllo se sessione esiste 
 		boolean sessionExist;
-		sessionExist = cacheClient.exist(request.getBt(), session);
+		sessionExist = cacheClient.exist(request.getBt());
 		if(!sessionExist) {
 			response.setSessionNoExist(true);
 			return response;

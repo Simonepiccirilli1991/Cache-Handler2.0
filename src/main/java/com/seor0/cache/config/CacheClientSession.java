@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.config.MapConfig;
@@ -16,7 +17,7 @@ import com.seor0.cache.model.SessionUtente;
 public class CacheClientSession {
 
 	public static final String SESSIONS = "session";
-	  private final HazelcastInstance hazelcastInstance 
+	  private final HazelcastInstance hazelcastInstance1 
 	     = Hazelcast.newHazelcastInstance(createConfig());
 
 	  public Config createConfig() {
@@ -33,39 +34,39 @@ public class CacheClientSession {
 	  }
 	  
 	  public SessionUtente put(String bt, SessionUtente session){
-		    IMap<String, SessionUtente> map = hazelcastInstance.getMap(SESSIONS);
+		    IMap<String, SessionUtente> map = hazelcastInstance1.getMap(SESSIONS);
 		    return map.putIfAbsent(bt, session);
 		  }
 
 		  public SessionUtente get(String bt){
-		    IMap<String, SessionUtente> map = hazelcastInstance.getMap(SESSIONS);
-		    //return map.get(bt);
+		    IMap<String, SessionUtente> map = hazelcastInstance1.getMap(SESSIONS);
+		    return map.get(bt);
 		    
-		    SessionUtente resp =  map.get(bt);
-		    // ogni volta che chiamo la get checko se sessione ancora valida max 5 min
-		    
-		    //LocalTime timeStart = LocalTime.parse(resp.getGeneTime());
-		    LocalTime timeStart = (resp.getUpdateTime() != null) ? LocalTime.parse(resp.getUpdateTime()) : LocalTime.parse(resp.getGeneTime());
-			LocalTime timeEnd = LocalTime.parse(new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime()));
-			// addo 5 minuti al tempo di start tempo massimo
-			System.out.println("Time start piu 5 min ="+ timeStart.plusMinutes(1) );
-			System.out.println("Time end ="+ timeEnd );
-			// check se tempo limite e edentro start +1 minuto
-			if(timeEnd.isAfter(timeStart.plusMinutes(5))) {
-				resp.setSessionActive(false); return resp;
-			}
-			
-			return resp;
+//		    SessionUtente resp =  map.get(bt);
+//		    // ogni volta che chiamo la get checko se sessione ancora valida max 5 min
+//		    
+//		    //LocalTime timeStart = LocalTime.parse(resp.getGeneTime());
+//		    LocalTime timeStart = (StringUtils.isEmpty(resp.getUpdateTime())) ? LocalTime.parse(resp.getUpdateTime()) : LocalTime.parse(resp.getGeneTime());
+//			LocalTime timeEnd = LocalTime.parse(new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime()));
+//			// addo 5 minuti al tempo di start tempo massimo
+//			System.out.println("Time start piu 5 min ="+ timeStart.plusMinutes(1) );
+//			System.out.println("Time end ="+ timeEnd );
+//			// check se tempo limite e edentro start +1 minuto
+//			if(timeEnd.isAfter(timeStart.plusMinutes(5))) {
+//				resp.setSessionActive(false); return resp;
+//			}
+//			
+//			return resp;
 		  }
 		  
 		  public SessionUtente insert(String bt, SessionUtente request){
-			    IMap<String, SessionUtente> map = hazelcastInstance.getMap(SESSIONS);
+			    IMap<String, SessionUtente> map = hazelcastInstance1.getMap(SESSIONS);
 			    map.put(bt, request);
 			    return request;
 			  }
 		  
-		  public boolean exist(String bt, SessionUtente request){
-			    IMap<String, SessionUtente> map = hazelcastInstance.getMap(SESSIONS);
+		  public boolean exist(String bt){
+			    IMap<String, SessionUtente> map = hazelcastInstance1.getMap(SESSIONS);
 			    SessionUtente resp = new SessionUtente();
 			    try {
 			    	resp = map.get(bt);
@@ -78,4 +79,6 @@ public class CacheClientSession {
 			    
 			    return false;
 			  }
+		  
+		  
 }
