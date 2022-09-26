@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.seor0.cache.config.CacheClient;
+import com.seor0.cache.config.CacheClientOtp;
 import com.seor0.cache.fragment.service.GeneraInviaService;
 import com.seor0.cache.model.OtpBo;
 import com.seor0.cache.service.request.CheckOtpRequest;
@@ -20,7 +20,7 @@ public class OtpService {
 	
 
 	@Autowired
-	private CacheClient cacheClient;
+	private CacheClientOtp cacheClient;
 	@Autowired
 	private GeneraInviaService giService;
 	

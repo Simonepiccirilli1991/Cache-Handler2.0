@@ -20,7 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.seor0.cache.config.CacheClient;
+import com.seor0.cache.config.CacheClientOtp;
 import com.seor0.cache.fragment.service.GeneraInviaService;
 import com.seor0.cache.service.OtpService;
 import com.seor0.cache.service.request.GeneraInviaRequest;
@@ -38,7 +38,7 @@ public class CacheControllerTest {
 	@Mock 
 	RestTemplate rt;
 	@Mock
-	CacheClient ch;
+	CacheClientOtp ch;
 	@Autowired 
 	protected MockMvc mvc;
 	@InjectMocks

@@ -10,7 +10,7 @@ import com.hazelcast.map.IMap;
 import com.seor0.cache.model.OtpBo;
 
 @Component
-public class CacheClient {
+public class CacheClientOtp {
 
 	public static final String OTPS = "otps";
 	  private final HazelcastInstance hazelcastInstance 
