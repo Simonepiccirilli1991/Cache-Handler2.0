@@ -105,17 +105,17 @@ public class SessionService {
 		return response;
 	}
 	
-	public SessionResponse getSession(SessionRequest request) {
+	public SessionResponse getSession(String bt) {
 		SessionResponse response = new SessionResponse();
 		SessionUtente session = new SessionUtente();
 		//controllo se sessione esiste 
 		boolean sessionExist;
-		sessionExist = cacheClient.exist(request.getBt());
+		sessionExist = cacheClient.exist(bt);
 		if(!sessionExist) {
 			response.setSessionNoExist(true);
 			return response;
 		}
-		session = cacheClient.get(request.getBt()); 
+		session = cacheClient.get(bt); 
 		//LocalTime timeStart = LocalTime.parse(resp.getGeneTime());
 		LocalTime timeStart = (session.getUpdateTime() != null) ? LocalTime.parse(session.getUpdateTime()) : LocalTime.parse(session.getGeneTime());
 		LocalTime timeEnd = LocalTime.parse(new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime()));

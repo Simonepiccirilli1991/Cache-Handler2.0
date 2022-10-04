@@ -45,7 +45,7 @@ public class SessionController {
 			@RequestHeader(name = "CHANNEL", required = false) String canale,
 			@RequestHeader(name = "X-SESSIONID", required = false) String sessionId){
 		
-		return ss.getSession(request);
+		return ss.getSession(request.getBt());
 			
 		
 	}
