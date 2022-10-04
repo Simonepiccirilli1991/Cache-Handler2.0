@@ -126,7 +126,7 @@ public class SessionService {
 		if(timeEnd.isAfter(timeStart.plusMinutes(5))) {
 			response.setSessionActive(false); return response;
 		}
-		
+		response.setSessionId(session.getSessionId());
 		response.setScope(session.getScope());
 		response.setBt(session.getBt());
 		response.setSessionActive(session.isSessionActive());

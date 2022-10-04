@@ -18,15 +18,15 @@ public class CacheClientSession {
 
 	public static final String SESSIONS = "sessions";
 	  private final HazelcastInstance hazelcastInstance1 
-	     = Hazelcast.newHazelcastInstance(createConfig());
+	     = Hazelcast.newHazelcastInstance(createConfig1());
 
-	  public Config createConfig() {
+	  public Config createConfig1() {
 	    Config config = new Config();
-	    config.addMapConfig(mapConfig());
+	    config.addMapConfig(mapConfig1());
 	    return config;
 	  }
 
-	  private MapConfig mapConfig() {
+	  private MapConfig mapConfig1() {
 	    MapConfig mapConfig = new MapConfig(SESSIONS);
 	    mapConfig.setTimeToLiveSeconds(360);
 	    mapConfig.setMaxIdleSeconds(360);

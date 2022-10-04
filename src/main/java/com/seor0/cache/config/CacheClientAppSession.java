@@ -1,6 +1,7 @@
 package com.seor0.cache.config;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.config.MapConfig;
@@ -13,16 +14,16 @@ import com.seor0.cache.model.AppSession;
 public class CacheClientAppSession {
 
 	public static final String APPSESSION = "appsessions";
-	  private final HazelcastInstance hazelcastInstance1 
-	     = Hazelcast.newHazelcastInstance(createConfig());
+	  private final HazelcastInstance hazelcastInstance3 
+	     = Hazelcast.newHazelcastInstance(createConfig3());
 
-	  public Config createConfig() {
+	  public Config createConfig3() {
 	    Config config = new Config();
-	    config.addMapConfig(mapConfig());
+	    config.addMapConfig(mapConfig3());
 	    return config;
 	  }
 
-	  private MapConfig mapConfig() {
+	  private MapConfig mapConfig3() {
 	    MapConfig mapConfig = new MapConfig(APPSESSION);
 	    mapConfig.setTimeToLiveSeconds(360);
 	    mapConfig.setMaxIdleSeconds(360);
@@ -30,12 +31,12 @@ public class CacheClientAppSession {
 	  }
 	  
 	  public AppSession put(String bt, AppSession session){
-		    IMap<String, AppSession> map = hazelcastInstance1.getMap(APPSESSION);
+		    IMap<String, AppSession> map = hazelcastInstance3.getMap(APPSESSION);
 		    return map.putIfAbsent(bt, session);
 		  }
 
 		  public AppSession get(String key){
-		    IMap<String, AppSession> map = hazelcastInstance1.getMap(APPSESSION);
+		    IMap<String, AppSession> map = hazelcastInstance3.getMap(APPSESSION);
 		    return map.get(key);
 		    
 //		    SessionUtente resp =  map.get(bt);
@@ -56,13 +57,13 @@ public class CacheClientAppSession {
 		  }
 		  
 		  public AppSession insert(String key, AppSession request){
-			    IMap<String, AppSession> map = hazelcastInstance1.getMap(APPSESSION);
+			    IMap<String, AppSession> map = hazelcastInstance3.getMap(APPSESSION);
 			    map.put(key, request);
 			    return request;
 			  }
 		  
 		  public boolean exist(String bt){
-			    IMap<String, AppSession> map = hazelcastInstance1.getMap(APPSESSION);
+			    IMap<String, AppSession> map = hazelcastInstance3.getMap(APPSESSION);
 			    AppSession resp = new AppSession();
 			    try {
 			    	resp = map.get(bt);
@@ -70,7 +71,7 @@ public class CacheClientAppSession {
 			    catch(Exception e) {
 			    	
 			    }
-			    if(resp != null) 
+			    if(!ObjectUtils.isEmpty(resp)) 
 			    	return true;
 			    
 			    return false;

@@ -13,16 +13,16 @@ import com.seor0.cache.model.OtpBo;
 public class CacheClientOtp {
 
 	public static final String OTPS = "otps";
-	  private final HazelcastInstance hazelcastInstance 
+	  private final HazelcastInstance hazelcastInstance2 
 	     = Hazelcast.newHazelcastInstance(createConfig2());
 
 	  public Config createConfig2() {
 	    Config config = new Config();
-	    config.addMapConfig(mapConfig());
+	    config.addMapConfig(mapConfig2());
 	    return config;
 	  }
 
-	  private MapConfig mapConfig() {
+	  private MapConfig mapConfig2() {
 	    MapConfig mapConfig = new MapConfig(OTPS);
 	    mapConfig.setTimeToLiveSeconds(360);
 	    mapConfig.setMaxIdleSeconds(120);
@@ -30,17 +30,17 @@ public class CacheClientOtp {
 	  }
 	  
 	  public OtpBo put(String number, OtpBo car){
-		    IMap<String, OtpBo> map = hazelcastInstance.getMap(OTPS);
+		    IMap<String, OtpBo> map = hazelcastInstance2.getMap(OTPS);
 		    return map.putIfAbsent(number, car);
 		  }
 
 		  public OtpBo get(String key){
-		    IMap<String, OtpBo> map = hazelcastInstance.getMap(OTPS);
+		    IMap<String, OtpBo> map = hazelcastInstance2.getMap(OTPS);
 		    return map.get(key);
 		  }
 		  
 		  public String insert(String key, OtpBo request){
-			    IMap<String, OtpBo> map = hazelcastInstance.getMap(OTPS);
+			    IMap<String, OtpBo> map = hazelcastInstance2.getMap(OTPS);
 			    map.put(key, request);
 			    return key;
 			  }

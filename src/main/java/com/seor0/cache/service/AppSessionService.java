@@ -5,8 +5,10 @@ import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.HeadersBuilder;
 import org.springframework.stereotype.Service;
 
 import com.seor0.cache.config.CacheClientAppSession;
@@ -28,9 +30,11 @@ public class AppSessionService {
 	@Value("${smgy.cache.key}")
 	 String keyStr;
 	
+	String randomVector = "1234567891012131";
+	
 	public ResponseEntity<AppSessionResponse> creaSession(AppSessionRequest request){
-		
-		ResponseEntity<AppSessionResponse> oResponse = new ResponseEntity<AppSessionResponse>(new AppSessionResponse(),HttpStatus.OK);
+		AppSessionResponse response = new AppSessionResponse();
+		//ResponseEntity<AppSessionResponse> oResponse = new ResponseEntity<AppSessionResponse>(new AppSessionResponse(),HttpStatus.OK);
 		AppSession appSession = new AppSession();
 		
 		// prima di creare controllo che gia non esista sessione, in caso ritorno response specifica con codice 
@@ -38,11 +42,11 @@ public class AppSessionService {
 		
 		// sessione esiste ed e valida
 		if(sessionAlreadyExist) {
-			oResponse.getBody().setAlreadyActive(true);
-			oResponse.getBody().setCodServizio("03-alreadyActive");
-			ResponseEntity.status(HttpStatus.UPGRADE_REQUIRED);
-			
-			return oResponse;
+//			oResponse.getBody().setAlreadyActive(true);
+//			oResponse.getBody().setCodServizio("03-alreadyActive");
+			response.setAlreadyActive(true);
+			response.setCodServizio("03-alreadyActive");
+			return new ResponseEntity<>(response,HttpStatus.UPGRADE_REQUIRED);
 		}
 		
 		// utente non ha gia sessione attive , controllo che la sessione di sicurezza sia valida
@@ -59,18 +63,25 @@ public class AppSessionService {
 		appSession.setSessionActive(true);
 		appSession.setAppName(request.getAppName());
 		appSession.setGeneTime((new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime())));
-		appSession.setAppSessionId(crypto(request.getBt(), request.getSecSession()));
+		appSession.setAppSessionId(crypto(request.getSecSession()));
 		cacheClient.insert(request.getBt(), appSession);
 		
 	
 		
-		oResponse.getBody().setActive(true);
-		oResponse.getBody().setAppSessionId(appSession.getAppSessionId());
-		oResponse.getBody().setCodServizio("00 - OK");
-		// passo header con data inizio session Applicativa
-		oResponse.getHeaders().add("timeStart", appSession.getGeneTime());
+//		oResponse.getBody().setActive(true);
+//		oResponse.getBody().setAppSessionId(appSession.getAppSessionId());
+//		oResponse.getBody().setCodServizio("00 - OK");
 		
-		return oResponse;
+		response.setActive(true);
+		response.setAppSessionId(appSession.getAppSessionId());
+		response.setCodServizio("00 - OK");
+		
+		// passo header con data inizio session Applicativa
+		 HttpHeaders responseHeaders = new HttpHeaders();
+		 responseHeaders.add("appTime", "priva");
+		
+		
+		return new ResponseEntity<>(response,responseHeaders,HttpStatus.OK);
 	}
 	
 	
@@ -78,9 +89,10 @@ public class AppSessionService {
 		
 		// controllo se esiste gia una sessione
 		boolean sessionExist = cacheClient.exist(bt);
-		AppSession session = cacheClient.get(bt);
 		// se esiste controllo che sia ancora valida
 		if(sessionExist) {
+			AppSession session = cacheClient.get(bt);
+			
 			LocalTime timeStart = (session.getUpdateTime() != null) ? LocalTime.parse(session.getUpdateTime()) : LocalTime.parse(session.getGeneTime());
 			LocalTime timeEnd = LocalTime.parse(new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime()));
 			// addo 5 minuti al tempo di start tempo massimo
@@ -95,16 +107,17 @@ public class AppSessionService {
 		}
 			
 		
-		return true;
+		return false;
 	}
 	
 	
 	// metodi usati per criptare
-	private String crypto(String bt, String secSession) {
+	private String crypto(String secSession) {
 		
 		String key = keyStr;
+		String vector = randomVector;
 		// crypto 
-		String crypt = Base64Crypter.encrypt(key, bt, secSession);
+		String crypt = Base64Crypter.encrypt(key, vector, secSession);
 		 
 		
 		return crypt;
@@ -112,8 +125,9 @@ public class AppSessionService {
 	
 	private String deCrypto(String bt, String secSession) {
 		String key = keyStr;
+		String vector = randomVector;
 		// crypto 
-		String crypt = Base64Crypter.decrypt(key, bt, secSession);
+		String crypt = Base64Crypter.decrypt(key, vector, secSession);
 		 
 		
 		return crypt;
