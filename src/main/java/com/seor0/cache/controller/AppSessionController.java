@@ -15,7 +15,7 @@ import com.seor0.cache.service.request.AppSessionRequest;
 import com.seor0.cache.service.response.AppSessionResponse;
 
 @RestController
-@RequestMapping("app/session")
+@RequestMapping("app")
 public class AppSessionController {
 
 	@Autowired
@@ -29,7 +29,7 @@ public class AppSessionController {
 		}	
 		request.setAppName(header.getFirst("APP_NAME"));
 		request.setSecSession(header.getFirst("SEC_SESSION"));
-		System.out.println("qui ci sono");	
+		//System.out.println("qui ci sono");	
 			
 		return apService.creaSession(request);
 	}

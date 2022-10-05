@@ -42,11 +42,14 @@ public class AppSessionService {
 		
 		// sessione esiste ed e valida
 		if(sessionAlreadyExist) {
-//			oResponse.getBody().setAlreadyActive(true);
-//			oResponse.getBody().setCodServizio("03-alreadyActive");
+			AppSession session = cacheClient.get(request.getBt());
+			
 			response.setAlreadyActive(true);
 			response.setCodServizio("03-alreadyActive");
-			return new ResponseEntity<>(response,HttpStatus.UPGRADE_REQUIRED);
+			response.setAppSessionId(session.getAppSessionId());
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("appTIme", session.getGeneTime());
+			return new ResponseEntity<>(response,headers,HttpStatus.OK);
 		}
 		
 		// utente non ha gia sessione attive , controllo che la sessione di sicurezza sia valida
@@ -96,7 +99,7 @@ public class AppSessionService {
 			LocalTime timeStart = (session.getUpdateTime() != null) ? LocalTime.parse(session.getUpdateTime()) : LocalTime.parse(session.getGeneTime());
 			LocalTime timeEnd = LocalTime.parse(new SimpleDateFormat("HH:mm:ss").format(new java.util.Date().getTime()));
 			// addo 5 minuti al tempo di start tempo massimo
-			System.out.println("Time start piu 5 min ="+ timeStart.plusMinutes(1) );
+			System.out.println("Time start piu 5 min ="+ timeStart.plusMinutes(5) );
 			System.out.println("Time end ="+ timeEnd );
 			// check se tempo limite e edentro start +1 minuto
 			if(timeEnd.isAfter(timeStart.plusMinutes(5))) {
