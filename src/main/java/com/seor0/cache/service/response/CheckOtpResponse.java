@@ -4,6 +4,7 @@ public class CheckOtpResponse {
 
 	private String codiceEsito;
 	private Boolean checkOk;
+	private Boolean mail = true;
 	
 	public String getCodiceEsito() {
 		return codiceEsito;
